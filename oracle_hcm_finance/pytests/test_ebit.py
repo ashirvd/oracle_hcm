@@ -22,6 +22,7 @@ from oracle_hcm_finance.Finance_KPIs.YTD_EBIT_kpis import ebit
     "August",
     "September"
 ])
+
 @pytest.mark.run(order=1)
 def test_ebit(month, expected_output, capsys):
     ebit(month)  # Call the ebit function
