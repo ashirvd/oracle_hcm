@@ -1,5 +1,5 @@
 import pytest
-from oracle_hcm_finance.Finance_KPIs.receivables_ageing_kpis import receivables_ageing  # Adjust the import according to your module structure
+from oracle_hcm_finance.Finance_KPIs.receivables_ageing_kpis import receivables_ageing 
 
 @pytest.mark.parametrize("month, month_name", [
     (1, "January"),
