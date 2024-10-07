@@ -1,0 +1,40 @@
+;;;;
+;;;;
+;;;;
+;;;;
+"Profit and Loss Statement
+THC Consolidated";YTD Jan-Mar;YTD Jan-Mar;YTD Budget;YTD Budget
+;Budget 000';Actual 000';Variance, abs;Variance (%)
+;;;;
+Revenue THC;267,251;269,391;(2,140);(1)%
+MSC;233,167;216,040;17,127;8 %
+Flying;13,280;32,551;(19,270);(59)%
+Other;20,803;20,800;3;0 %
+Revenue Consolidated RTS;-;682;(682);(100)%
+Revenue Consolidated;267,251;270,073;(2,822);(1)%
+;;;;
+Cost of Revenue THC;243,696;205,975;37,721;18 %
+Fixed;225,346;182,372;42,974;24 %
+Variable;18,350;23,603;(5,253);(22)%
+Cost of Revenue RTS;-;7,270;7,270;100 %
+Cost of Revenue Consolidated;243,696;213,245;(30,451);(14)%
+;;;;
+Gross Profit THC;23,554;63,415;(39,861);(63)%
+Gross Profit RTS;-;(6,588);6,588;100 %
+Gross Profit Consolidated;23,554;56,828;(33,273);(59)%
+;;;;
+SG&A THC;33,994;3,665;30,328;827 %
+SG&A RTS;-;-;-;-
+SG&A Consolidated;33,994;3,665;(30,328);(827)%
+;;;;
+EBIT THC;(10,440);59,750;(70,190);(117)%
+EBIT RTS;-;(6,588);6,588;100 %
+EBIT Consolidated;(10,440);53,162;(63,602);(120)%
+;;;;
+Other Income THC;11,515;8,824;2,690;30 %
+Other Income RTS;-;11;(11);(100)%
+Other Income/(Loss) Consolidated;11,515;8,116;3,399;42 %
+;;;;
+Net Income THC;1,075;68,574;(67,499);(98)%
+Net Income RTS;-;(6,577);6,577;100 %
+Net Income Consolidated;1,075;61,278;(60,203);(98)%
