@@ -13,7 +13,7 @@ from oracle_hcm_finance.Finance_KPIs.receivables_ageing_kpis import receivables_
     (9, "September")
 ], ids=["January", "February", "March", "April", "May", "June", "July", "August", "September"])
 
-#@pytest.mark.run(order=8)  
+@pytest.mark.run(order=8)  
 def test_receivables_ageing(capfd, month, month_name):
     # Call the function to process receivables for the given month
     receivables_ageing(month)
