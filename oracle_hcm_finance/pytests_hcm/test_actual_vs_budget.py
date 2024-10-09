@@ -10,7 +10,7 @@ from oracle_hcm_finance.HCM_KPIs.actual_vs_budget import actual_vs_budget  # Adj
     "June",
     "July"
 ])
-@pytest.mark.run(order=1)  # Adjust order as needed
+@pytest.mark.run(order=7) 
 def test_actual_vs_budget(month, capsys):
     actual_vs_budget(month)  # Call the actual_vs_budget function
     captured = capsys.readouterr()  # Capture the output
