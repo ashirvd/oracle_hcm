@@ -68,4 +68,3 @@ def new_joiners(month, year=2024):
 # Example usage
 new_joiners(1)  # Count of new joiners for January 2024
 new_joiners('all')  # Count of new joiners for all months in 2024
-#jan 40, Feb 46 , mar 24, apr 22, may 44, june 36
