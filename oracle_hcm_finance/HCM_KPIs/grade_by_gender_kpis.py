@@ -12,6 +12,8 @@ def map_grade(month):
     """
     file_path = '../data_hcm/Employee Data Without Payroll Details ΓÇô Active and Inactive_Output.xlsx'
 
+    year = 2024
+
     # Check if the file exists
     if not os.path.exists(file_path):
         print(f'The specified file "{file_path}" was not found. Skipping...')
@@ -65,15 +67,14 @@ def map_grade(month):
         # If the month is 'all', iterate over all months
         if month == 'all':
             for m in range(1, 13):
-                month_cutoff_date = pd.Timestamp(f'2024-{m:02d}-01')
+                month_cutoff_date = pd.Timestamp(f'{year}-{m:02d}-01')
                 # Filter data based on the new criteria for the specified month
                 filtered_data = data[
                     ((data['Actual Termination date'].isna()) | (
-                                data['Actual Termination date'] >= month_cutoff_date)) &
+                            data['Actual Termination date'] >= month_cutoff_date)) &
                     (data['Date of Joining'] < month_cutoff_date) &
                     (data['Job title - English'] != 'Board Member')
                     ]
-
 
                 # Check if the Gender and Grade columns exist
                 if 'Gender' in filtered_data.columns and 'Grade' in filtered_data.columns:
@@ -100,13 +101,12 @@ def map_grade(month):
 
         else:
             # Define the cutoff date for the specified month
-            month_cutoff_date = pd.Timestamp(f'2024-{month:02d}-01')
+            month_cutoff_date = pd.Timestamp(f'{year}-{month:02d}-01')
             filtered_data = data[
                 ((data['Actual Termination date'].isna()) | (data['Actual Termination date'] >= month_cutoff_date)) &
                 (data['Date of Joining'] < month_cutoff_date) &
                 (data['Job title - English'] != 'Board Member')
                 ]
-
 
             # Check if the Gender and Grade columns exist
             if 'Gender' in filtered_data.columns and 'Grade' in filtered_data.columns:
@@ -133,7 +133,6 @@ def map_grade(month):
 
     except UnicodeDecodeError:
         print('Failed to load file with ISO-8859-1 encoding. Trying a different encoding.')
-
 
 
 map_grade(4)  # For April
