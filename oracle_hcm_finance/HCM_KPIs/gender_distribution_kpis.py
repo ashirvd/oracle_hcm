@@ -1,64 +1,130 @@
 import pandas as pd
-from datetime import datetime
+import os
 
-file_path = '../datasources/finance/KPI Dashboard - Employee Data Without Payroll Details – Active and Inactive_Output1.xlsx'
+# Function to map grades and calculate gender distribution for a specific month or all months
+def gender_distribution(month):
+    """
+    Calculates the count and percentage of male and female employees for a specified month or all months.
 
-def filter_by_termination_date(data):
-    # Convert 'Actual Termination date' to datetime format
-    if 'Actual Termination date' in data.columns:
-        data = data.copy()  # Make a copy to avoid modifying the original DataFrame
-        data['Actual Termination date'] = pd.to_datetime(data['Actual Termination date'], format='%d-%b-%Y', errors='coerce')
+    Parameters:
+    - month (int or str): The month (1 for January, 2 for February, etc.) or 'all' for all months.
+    """
+    file_path = '../data_hcm/Employee Data Without Payroll Details ΓÇô Active and Inactive_Output.xlsx'
+    year = 2024
 
-        today = pd.Timestamp(datetime.now().date())
-        end_of_2024 = pd.Timestamp('2024-12-31')
+    # Check if the file exists
+    if not os.path.exists(file_path):
+        print(f'The specified file "{file_path}" was not found. Skipping...')
+        return  # Exit the function if the file is not found
 
-        # Filter employees based on termination date criteria
-        filtered_data = data[
-            (data['Actual Termination date'].isna()) |
-            ((data['Actual Termination date'] > today) &
-             (data['Actual Termination date'] <= end_of_2024))
-        ]
-        return filtered_data
-    else:
-        print('Actual Termination Date column is not in the dataset.')
-        return pd.DataFrame()  # Return an empty DataFrame
+    # Function to map individual grades
+    def grade_mapper(grade):
+        if grade == '1':
+            return '1'
+        elif grade in ['2', 'T1']:
+            return '2'
+        elif grade in ['3', 'T2']:
+            return '3'
+        elif grade in ['4', 'T3']:
+            return '4'
+        elif grade in ['5', 'T4', 'C1']:
+            return '5'
+        elif grade in ['6', 'T5']:
+            return '6'
+        elif grade in ['7', 'T6', 'C2']:
+            return '7'
+        elif grade == '8':
+            return '8'
+        elif grade == '9':
+            return '9'
+        elif grade == '10':
+            return '10'
+        elif grade == '11':
+            return '11'
+        elif grade == '12':
+            return '12'
+        elif grade == '13':
+            return '13'
+        elif grade == 'CEO':
+            return 'CEO'
+        else:
+            return 'Trainees'
 
-try:
-    # Load the Excel file
-    data = pd.read_excel(file_path)
+    try:
+        # Load the Excel file
+        data = pd.read_excel(file_path)
 
-    # Filter data based on termination date
-    filtered_data = filter_by_termination_date(data)
+        # Ensure date columns are in datetime format
+        if 'Date of Joining' in data.columns:
+            data['Date of Joining'] = pd.to_datetime(data['Date of Joining'], format='%d-%b-%Y', errors='coerce')
 
-    # Get the total number of rows after filtering by termination date
-    total_rows_filtered = filtered_data.shape[0]
-    print(f'Total number of records after filtering by termination date: {total_rows_filtered}')
+        if 'Actual Termination date' in data.columns:
+            data['Actual Termination date'] = pd.to_datetime(data['Actual Termination date'], format='%d-%b-%Y',
+                                                             errors='coerce')
 
-    # Check if the Gender column exists
-    if 'Gender' in filtered_data.columns:
-        # Count the number of employees by gender
-        gender_counts = filtered_data['Gender'].value_counts()
+        # If the month is 'all', iterate over all months
+        if month == 'all':
+            for m in range(1, 13):
+                month_cutoff_date = pd.Timestamp(f'{year}-{m:02d}-01')
+                # Filter data based on the new criteria for the specified month
+                filtered_data = data[
+                    ((data['Actual Termination date'].isna()) | (data['Actual Termination date'] >= month_cutoff_date)) &
+                    (data['Date of Joining'] < month_cutoff_date) &
+                    (data['Job title - English'] != 'Board Member')
+                ]
 
-        # Calculate and print counts and percentages
-        total_gender_counts = {
-            'Male': gender_counts.get('Male', 0),
-            'Female': gender_counts.get('Female', 0),
-        }
-        other_gender_count = total_rows_filtered - sum(total_gender_counts.values())
+                if 'Gender' in filtered_data.columns:
+                    # Filter the data to include only Male and Female genders
+                    filtered_data = filtered_data[filtered_data['Gender'].isin(['Male', 'Female'])]
 
-        print(f'Total number of employees with gender Male: {total_gender_counts["Male"]}')
-        print(f'Total number of employees with gender Female: {total_gender_counts["Female"]}')
-        print(f'Total number of employees with other genders: {other_gender_count}')
+                    # Group by Gender and count occurrences
+                    gender_counts = filtered_data['Gender'].value_counts()
 
-        # Calculate percentages
-        percentage_male = (total_gender_counts['Male'] / total_rows_filtered) * 100
-        percentage_female = (total_gender_counts['Female'] / total_rows_filtered) * 100
+                    # Calculate total employees
+                    total_employees = gender_counts.sum()
 
-        print(f'Percentage of employees with gender Male: {percentage_male:.2f}%')
-        print(f'Percentage of employees with gender Female: {percentage_female:.2f}%')
+                    # Calculate percentage for each gender
+                    gender_percentages = (gender_counts / total_employees) * 100
 
-    else:
-        print('Gender column not found in the filtered data.')
+                    print(f'Gender distribution for {month_cutoff_date.strftime("%B, %Y")}:')
+                    for gender, count in gender_counts.items():
+                        percentage = gender_percentages[gender]
+                        print(f'{gender} {count} ({percentage:.2f}%)')
+                else:
+                    print('Missing column Gender in the dataset.')
 
-except UnicodeDecodeError:
-    print('Failed to load file with ISO-8859-1 encoding. Trying a different encoding.')
+        else:
+            # Define the cutoff date for the specified month
+            month_cutoff_date = pd.Timestamp(f'{year}-{month:02d}-01')
+            filtered_data = data[
+                ((data['Actual Termination date'].isna()) | (data['Actual Termination date'] >= month_cutoff_date)) &
+                (data['Date of Joining'] < month_cutoff_date) &
+                (data['Job title - English'] != 'Board Member')
+            ]
+
+            if 'Gender' in filtered_data.columns:
+                # Filter the data to include only Male and Female genders
+                filtered_data = filtered_data[filtered_data['Gender'].isin(['Male', 'Female'])]
+
+                # Group by Gender and count occurrences
+                gender_counts = filtered_data['Gender'].value_counts()
+
+                # Calculate total employees
+                total_employees = gender_counts.sum()
+
+                # Calculate percentage for each gender
+                gender_percentages = (gender_counts / total_employees) * 100
+
+                print(f'Gender distribution for {month_cutoff_date.strftime("%B, %Y")}:')
+                for gender, count in gender_counts.items():
+                    percentage = gender_percentages[gender]
+                    print(f'{gender} {count} ({percentage:.2f}%)')
+            else:
+                print('Missing column Gender in the dataset.')
+
+    except UnicodeDecodeError:
+        print('Failed to load file with ISO-8859-1 encoding. Trying a different encoding.')
+
+# Example usage
+gender_distribution(4)  # For April
+gender_distribution('all')  # For all months
