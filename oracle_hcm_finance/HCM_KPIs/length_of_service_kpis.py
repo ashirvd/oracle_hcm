@@ -2,6 +2,8 @@ import pandas as pd
 from datetime import datetime
 import os
 
+
+# Define the function to calculate length of service
 def length_of_service(month):
     target_year = 2024
     file_path = '../data_hcm/KPI Dashboard - Employee Data Without Payroll Details – Active and Inactive_Output1 (1) (1).xlsx'
@@ -94,18 +96,6 @@ def length_of_service(month):
         return service_counts, service_percentages
 
     def combine_service_bins(service_counts, service_percentages):
-        # Apply the adjustments
-        service_counts['<1 year'] += 1
-        service_counts['1-3 years'] -= 1
-
-        # Ensure the counts don't go negative after adjustment
-        service_counts['1-3 years'] = max(0, service_counts['1-3 years'])
-
-        # Recalculate percentages after adjustments
-        total_employees = service_counts.sum()
-        service_percentages = (service_counts / total_employees) * 100
-        service_percentages = service_percentages.round(2)
-
         # Combine '3-5 years' and '5+ years' into '3+ years'
         combined_count = service_counts['3-5 years'] + service_counts['5+ years']
         combined_percentage = service_percentages['3-5 years'] + service_percentages['5+ years']
